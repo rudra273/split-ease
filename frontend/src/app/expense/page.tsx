@@ -79,34 +79,6 @@ export default function ExpensePage() {
             Create New Expense
           </Link>
         </div>
-{/* 
-        {balanceSheet && (
-          <div className="bg-white p-4 rounded-lg shadow mb-6">
-            <h2 className="text-xl font-semibold mb-3">Balance Summary</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <p className="text-gray-600">Total Owed</p>
-                <p className="text-lg font-semibold">${balanceSheet.total_owed.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Total Paid</p>
-                <p className="text-lg font-semibold">${balanceSheet.total_paid.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Net Balance</p>
-                <p className="text-lg font-semibold">${balanceSheet.net_balance.toFixed(2)}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleDownloadCSV}
-              className="mt-4 text-blue-500 hover:text-blue-600"
-            >
-              Download CSV
-            </button>
-          </div>
-        )} */}
-
-        {/* -- */}
         {balanceSheet && (
             <div className="bg-white p-4 rounded-lg shadow mb-6">
                 <h2 className="text-xl font-semibold mb-3">Balance Summary</h2>
@@ -148,26 +120,7 @@ export default function ExpensePage() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {expenses.map((expense) => (
-                // <tr key={expense.id}>
-                //   <td className="px-6 py-4">{expense.title}</td>
-                //   <td className="px-6 py-4">${expense.amount.toFixed(2)}</td>
-                //   <td className="px-6 py-4">{expense.split_type}</td>
-                //   <td className="px-6 py-4">{expense.created_by_username}</td>
-                //   <td className="px-6 py-4 space-x-2">
-                //     <Link
-                //       href={`/expense/${expense.id}`}
-                //       className="text-blue-500 hover:text-blue-600"
-                //     >
-                //       View
-                //     </Link>
-                //     <button
-                //       onClick={() => handleDelete(expense.id!)}
-                //       className="text-red-500 hover:text-red-600 ml-2"
-                //     >
-                //       Delete
-                //     </button>
-                //   </td>
-                // </tr>
+              
                 <tr key={expense.id}>
                     <td className="px-6 py-4">{expense.title}</td>
                     <td className="px-6 py-4">${parseFloat(expense.amount).toFixed(2)}</td>

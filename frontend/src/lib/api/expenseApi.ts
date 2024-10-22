@@ -4,13 +4,21 @@ import { apiClient } from './apiClient';
 // Types
 export type SplitType = 'EQUAL' | 'EXACT' | 'PERCENTAGE';
 
+// export interface ExpenseSplit {
+//     id?: number;
+//     user: number;
+//     username?: string;
+//     amount?: number;
+//     percentage?: number;
+// }
+
 export interface ExpenseSplit {
     id?: number;
-    user: number;
-    username?: string;
+    username: string;
     amount?: number;
     percentage?: number;
 }
+
 
 export interface Expense {
     id?: number;

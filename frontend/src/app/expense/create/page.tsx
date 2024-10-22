@@ -1,9 +1,10 @@
-// src/app/expense/create/page.tsx
+// // src/app/expense/create/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { expenseApi, CreateExpensePayload, SplitType } from '@/lib/api/expenseApi';
+import { expenseApi, CreateExpensePayload, SplitType, ExpenseSplit } from '@/lib/api/expenseApi';
 
 export default function CreateExpensePage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function CreateExpensePage() {
     description: '',
     amount: 0,
     split_type: 'EQUAL',
-    splits: [{ user: 0, amount: 0 }]
+    splits: [{ username: '', amount: 0 }]
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +24,19 @@ export default function CreateExpensePage() {
     setError('');
 
     try {
-      await expenseApi.createExpense(expense);
+      // Transform the splits to match the API payload type
+      const payloadSplits = expense.splits.map(({ username, amount, percentage }) => ({
+        username,
+        ...(amount !== undefined && { amount }),
+        ...(percentage !== undefined && { percentage })
+      }));
+
+      const payload: CreateExpensePayload = {
+        ...expense,
+        splits: payloadSplits
+      };
+
+      await expenseApi.createExpense(payload);
       router.push('/expense');
     } catch (err) {
       setError('Failed to create expense');
@@ -32,16 +45,20 @@ export default function CreateExpensePage() {
     }
   };
 
-  const handleSplitChange = (index: number, field: keyof typeof expense.splits[0], value: number) => {
+  const handleSplitChange = (index: number, field: keyof ExpenseSplit, value: string | number) => {
     const newSplits = [...expense.splits];
-    newSplits[index] = { ...newSplits[index], [field]: value };
+    if (field === 'username') {
+      newSplits[index] = { ...newSplits[index], [field]: value as string };
+    } else {
+      newSplits[index] = { ...newSplits[index], [field]: parseFloat(value as string) || 0 };
+    }
     setExpense({ ...expense, splits: newSplits });
   };
 
   const addSplit = () => {
     setExpense({
       ...expense,
-      splits: [...expense.splits, { user: 0, amount: 0 }]
+      splits: [...expense.splits, { username: '', amount: 0 }]
     });
   };
 
@@ -109,21 +126,25 @@ export default function CreateExpensePage() {
             {expense.splits.map((split, index) => (
               <div key={index} className="flex gap-4 mb-2">
                 <input
-                  type="number"
-                  placeholder="User ID"
+                  type="text"
+                  placeholder="Username"
                   required
                   className="flex-1 border border-gray-300 rounded-md shadow-sm p-2"
-                  value={split.user}
-                  onChange={(e) => handleSplitChange(index, 'user', parseInt(e.target.value))}
+                  value={split.username}
+                  onChange={(e) => handleSplitChange(index, 'username', e.target.value)}
                 />
-                <input
-                  type="number"
-                  placeholder={expense.split_type === 'PERCENTAGE' ? 'Percentage' : 'Amount'}
-                  required
-                  className="flex-1 border border-gray-300 rounded-md shadow-sm p-2"
-                  value={expense.split_type === 'PERCENTAGE' ? split.percentage : split.amount}
-                  onChange={(e) => handleSplitChange(index, expense.split_type === 'PERCENTAGE' ? 'percentage' : 'amount', parseFloat(e.target.value))}
-                />
+                {expense.split_type !== 'EQUAL' && (
+                  <input
+                    type="number"
+                    placeholder={expense.split_type === 'PERCENTAGE' ? 'Percentage' : 'Amount'}
+                    required
+                    min="0"
+                    step={expense.split_type === 'PERCENTAGE' ? '1' : '0.01'}
+                    className="flex-1 border border-gray-300 rounded-md shadow-sm p-2"
+                    value={expense.split_type === 'PERCENTAGE' ? split.percentage : split.amount}
+                    onChange={(e) => handleSplitChange(index, expense.split_type === 'PERCENTAGE' ? 'percentage' : 'amount', e.target.value)}
+                  />
+                )}
                 {expense.splits.length > 1 && (
                   <button
                     type="button"
