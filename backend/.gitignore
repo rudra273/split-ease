@@ -1,0 +1,57 @@
+# Byte-compiled files
+*.py[cod]
+__pycache__/
+*.so
+
+# Django specific files
+db.sqlite3
+db.sqlite3-journal
+
+# Environment variables
+.vscode/
+
+# Static files
+/static/
+staticfiles/
+static/
+
+# Media files
+/media/
+
+# Local development
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+
+# Testing
+.coverage
+.tox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Django migrations
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/__pycache__/
+
+# IDEs and editors
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
