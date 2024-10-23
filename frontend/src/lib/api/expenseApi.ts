@@ -4,21 +4,15 @@ import { apiClient } from './apiClient';
 // Types
 export type SplitType = 'EQUAL' | 'EXACT' | 'PERCENTAGE';
 
-// export interface ExpenseSplit {
-//     id?: number;
-//     user: number;
-//     username?: string;
-//     amount?: number;
-//     percentage?: number;
-// }
 
 export interface ExpenseSplit {
     id?: number;
+    user?: number;
+    user_username?: string;
     username: string;
     amount?: number;
     percentage?: number;
 }
-
 
 export interface Expense {
     id?: number;
@@ -31,6 +25,8 @@ export interface Expense {
     splits: ExpenseSplit[];
     created_at?: string;
 }
+
+
 
 export interface CreateExpensePayload {
     title: string;
@@ -81,10 +77,16 @@ export const expenseApi = {
         }),
 
     // Delete expense
+    // deleteExpense: (id: number) =>
+    //     apiClient(`/expenses/${id}/`, {
+    //         method: 'DELETE',
+    //         requireAuth: true,
+    //     }),
     deleteExpense: (id: number) =>
         apiClient(`/expenses/${id}/`, {
             method: 'DELETE',
             requireAuth: true,
+            responseType: 'text' // Specify that we expect no content
         }),
 
     // Get user's expenses
